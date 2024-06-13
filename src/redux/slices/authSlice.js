@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 //초기 상태값
 const initialState = {
   isAuthenticated: localStorage.getItem("accessToken") ? true : false,
+  userId: "",
+  nickname: "",
 };
 
 const authSlice = createSlice({
@@ -10,9 +12,11 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      const token = action.payload;
-      localStorage.setItem("accessToken", token);
+      const user = action.payload;
+      localStorage.setItem("accessToken", user.accessToken);
       state.isAuthenticated = true;
+      state.userId = user.userId;
+      state.nickname = user.nickname;
     },
     logout: (state) => {
       localStorage.removeItem("accessToken");

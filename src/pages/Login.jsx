@@ -5,8 +5,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { login } from "../redux/slices/AuthSlice";
 import { useDispatch } from "react-redux";
+import { login } from "../redux/slices/authSlice";
 
 const StLoginForm = styled.form`
   background-color: white;
@@ -54,7 +54,8 @@ function Login() {
       );
       const data = response.data;
       if (data.success) {
-        dispatch(login(data.accessToken));
+        dispatch(login(data));
+        console.log(data);
         notifyLoginSuccess();
         navigate("/");
       } else {

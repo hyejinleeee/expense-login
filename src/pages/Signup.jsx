@@ -42,6 +42,22 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (id.length < 4 || id.length > 10) {
+      alert("아이디는 4~10글자로 입력해주세요.");
+      return;
+    }
+
+    if (password.length < 4 || password.length > 15) {
+      alert("비밀번호는 4~15글자로 입력해주세요.");
+      return;
+    }
+
+    if (nickname.length < 1 || nickname.length > 10) {
+      alert("닉네임은 1~10글자로 입력해주세요.");
+      return;
+    }
+
     try {
       const response = await axios.post(
         "https://moneyfulpublicpolicy.co.kr/register",

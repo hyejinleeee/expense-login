@@ -1,8 +1,10 @@
-import React, { useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { addList, delList } from "../redux/slices/expenseSlice";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
+import { isPending } from "@reduxjs/toolkit";
 
 const StForm = styled.form`
   display: flex;
@@ -44,55 +46,102 @@ const StBtnDiv = styled.div`
   gap: 10px;
 `;
 
+const fetchExpense = async ({ queryKey }) => {
+  const [_, id] = queryKey;
+  const { data } = await axios.get(`http://localhost:5001/expenses/${id}`);
+  return data;
+};
+
+const editExpense = async (updatedExpense) => {
+  const { id, ...rest } = updatedExpense;
+  const { data } = await axios.put(
+    `http://localhost:5001/expenses/${id}`,
+    rest
+  );
+  return data;
+};
+
+const deleteExpense = async (id) => {
+  const { data } = await axios.delete(`http://localhost:5001/expenses/${id}`);
+  return data;
+};
+
 function Detail() {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const lists = useSelector((state) => state.expense.lists);
-  const detail = lists.find((list) => list.id == id);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+  const { id } = useParams();
 
-  const dateRef = useRef();
-  const itemRef = useRef();
-  const amountRef = useRef();
-  const descriptionRef = useRef();
+  const {
+    data: selectedExpense,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ["expense", id],
+    queryFn: fetchExpense,
+  });
+
+  const mutationEdit = useMutation({
+    mutationFn: editExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["expenses"]);
+      navigate("/");
+    },
+  });
+
+  const mutationDelete = useMutation({
+    mutationFn: deleteExpense,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["expenses"]);
+      navigate("/");
+    },
+  });
+
+  const [date, setDate] = useState("");
+  const [item, setItem] = useState("");
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    if (selectedExpense) {
+      setDate(selectedExpense.date);
+      setItem(selectedExpense.item);
+      setAmount(selectedExpense.amount.toString());
+      setDescription(selectedExpense.description);
+    }
+  }, [selectedExpense]);
 
   const handleUpdate = (e) => {
     e.preventDefault();
 
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-    if (!datePattern.test(dateRef.current.value)) {
-      alert("날짜 형식이 올바르지 않습니다. YYYY-MM-DD 형식으로 입력해주세요.");
+    if (!datePattern.test(date)) {
+      alert("날짜를 YYYY-MM-DD 형식으로 입력해주세요.");
       return;
-    } else if (amountRef.current.value < 1) {
-      alert("유효한 금액을 입력해주세요.");
+    }
+    if (!item || parseInt(amount, 10) <= 0) {
+      alert("유효한 항목과 금액을 입력해주세요.");
       return;
     }
 
-    dispatch(delList(id));
-
-    const updatedList = {
-      id,
-      date: dateRef.current.value,
-      item: itemRef.current.value,
-      amount: amountRef.current.value,
-      description: descriptionRef.current.value,
+    const newExpense = {
+      ...selectedExpense,
+      date: date,
+      item: item,
+      amount: parseInt(amount, 10),
+      description: description,
     };
-    dispatch(addList(updatedList));
 
-    navigate(`/`);
+    mutationEdit.mutate(newExpense);
   };
 
   const handleDelete = () => {
-    const userConfirmed = confirm("정말로 이 지출을 삭제하시겠습니까?");
-    if (userConfirmed) {
-      dispatch(delList(id));
-      navigate(`/`);
-    }
-  };
-
-  const handleGoBack = () => {
+    mutationDelete.mutate(id);
     navigate(`/`);
   };
+
+  if (isPending) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
 
   return (
     <>
@@ -101,36 +150,36 @@ function Detail() {
           <label htmlFor="date">날짜</label>
           <input
             type="text"
-            defaultValue={detail.date}
+            defaultValue={date}
             placeholder="YYYY-MM-DD"
-            ref={dateRef}
+            onChange={(e) => setDate(e.target.value)}
           />
         </div>
         <div>
           <label htmlFor="item">지출항목</label>
           <input
             type="text"
-            defaultValue={detail.item}
+            defaultValue={item}
             placeholder="지출항목"
-            ref={itemRef}
+            onChange={(e) => setItem(e.target.value)}
           />
         </div>
         <div>
           <label htmlFor="amount">금액</label>
           <input
             type="number"
-            defaultValue={detail.amount}
+            defaultValue={amount}
             placeholder="금액"
-            ref={amountRef}
+            onChange={(e) => setAmount(e.target.value)}
           />
         </div>
         <div>
           <label htmlFor="description">지출내용</label>
           <input
             type="text"
-            defaultValue={detail.description}
+            defaultValue={description}
             placeholder="지출내용"
-            ref={descriptionRef}
+            onChange={(e) => setDescription(e.target.value)}
           />
         </div>
         <StBtnDiv>
@@ -138,7 +187,7 @@ function Detail() {
           <button type="button" onClick={handleDelete}>
             삭제
           </button>
-          <button type="button" onClick={handleGoBack}>
+          <button type="button" onClick={() => navigate(`/`)}>
             뒤로가기
           </button>
         </StBtnDiv>

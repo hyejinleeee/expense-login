@@ -2,6 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const StUl = styled.ul`
   width: 750px;
@@ -46,31 +48,64 @@ const StLi = styled.li`
     color: #063f06;
   }
 
+  > p:nth-child(5) {
+    color: #888383;
+  }
+
   &:hover {
     background-color: #f0f0f0;
   }
 `;
 
 function MonthlyList() {
+  const userId = useSelector((state) => state.auth.userId);
   const selectedMonth = useSelector((state) => state.btn);
-  const lists = useSelector((state) => state.expense.lists);
-
-  const filteredLists = lists.filter(
-    (list) => parseInt(list.date.split("-")[1]) == selectedMonth
-  );
-
   const navigate = useNavigate();
 
-  const handleClick = (id) => {
-    navigate(`/detail/${id}`);
+  const fetchExpenses = async () => {
+    const response = await axios.get("http://localhost:5001/expenses");
+    return response.data;
   };
+
+  const {
+    data: expenses,
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ["expenses"],
+    queryFn: fetchExpenses,
+  });
+
+  if (isPending) {
+    return <div>로딩중입니다...</div>;
+  }
+
+  if (error) {
+    console.error("데이터 조회 중 에러 발생:", error);
+    return <div>데이터 조회 중 오류가 발생했습니다.</div>;
+  }
+
+  const filteredLists = expenses.filter(
+    (expense) => expense.month == selectedMonth
+  );
+
+  const handleClick = (list) => {
+    if (userId === list.userId) {
+      navigate(`/detail/${list.id}`);
+    } else {
+      alert("권한이 없습니다.");
+    }
+  };
+
   return (
     <StUl>
-      {filteredLists.map((list) => (
-        <StLi key={list.id} onClick={() => handleClick(list.id)}>
+      {filteredLists?.map((list) => (
+        <StLi key={list.id} onClick={() => handleClick(list)}>
           <p>{list.date}</p>
           <p>{list.item}</p>
-          <p>{list.description}</p>
+          <p>
+            {list.description} (by {list.createdBy})
+          </p>
           <p>💸 {Number(list.amount).toLocaleString()}원</p>
         </StLi>
       ))}
