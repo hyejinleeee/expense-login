@@ -1,15 +1,13 @@
 import Router from "./shared/Router";
 import GlobalStyles from "./shared/GlobalStyles";
-import { Provider } from "react-redux";
-import store from "../src/redux/config/configStore";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <>
-      <Provider store={store}>
-        <GlobalStyles />
-        <Router />
-      </Provider>
+      <GlobalStyles />
+      <Router />
+      <ToastContainer autoClose={700} position="top-left" />
     </>
   );
 }

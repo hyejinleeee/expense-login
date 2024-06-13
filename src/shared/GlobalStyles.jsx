@@ -1,18 +1,17 @@
 import { createGlobalStyle } from "styled-components";
-import paperImg from "../assets/paper.jpeg";
 
 const GlobalStyles = createGlobalStyle`
 
+
+
   body {
     display: flex;
-    justify-content: center;
+    justify-content: center; 
     align-items: center;
-    padding-top: 30px;
-    background-image: url(${paperImg}); 
-    background-size: cover; 
-    background-repeat: no-repeat; 
-    background-position: center; 
-    font-size: 1rem;   
+    padding-top: 70px;
+    background-color: #efefeff3; 
+    font-size: 1.2rem;  
+
   }
 
   button {

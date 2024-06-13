@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import expenseSlice from "../slices/expenseSlice";
-import btnSlice from "../slices/btnSlice";
+import expense from "../slices/expenseSlice";
+import btn from "../slices/btnSlice";
+import auth from "../slices/AuthSlice";
 
 const store = configureStore({
   reducer: {
-    expense: expenseSlice,
-    btn: btnSlice,
+    expense,
+    btn,
+    auth,
   },
 });
 
