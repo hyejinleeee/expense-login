@@ -119,6 +119,46 @@
       "description": "s",
       "createdBy": "hyejin",
       "userId": "zzzz"
+    },
+    {
+      "month": 3,
+      "date": "2024-03-01",
+      "item": "수정",
+      "amount": 2,
+      "description": "수정",
+      "createdBy": "",
+      "userId": "",
+      "id": "3feb"
+    },
+    {
+      "id": "c800",
+      "month": 3,
+      "date": "2024-03-01",
+      "item": "식비",
+      "amount": "2",
+      "description": "회식",
+      "createdBy": "hyejin",
+      "userId": "zzzz"
+    },
+    {
+      "id": "2183",
+      "month": 10,
+      "date": "2024-10-01",
+      "item": "asdf",
+      "amount": "2",
+      "description": "asdf",
+      "createdBy": "hyejin",
+      "userId": "zzzz"
+    },
+    {
+      "id": "75af",
+      "month": 5,
+      "date": "2024-05-01",
+      "item": "asdf",
+      "amount": "2",
+      "description": "회식",
+      "createdBy": "hyejin",
+      "userId": "zzzz"
     }
   ]
 }

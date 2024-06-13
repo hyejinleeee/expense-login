@@ -58,7 +58,7 @@ const StLi = styled.li`
 `;
 
 function MonthlyList() {
-  const userId = useSelector((state) => state.auth.userId);
+  const userId = useSelector((state) => state.auth.user.id);
   const selectedMonth = useSelector((state) => state.btn);
   const navigate = useNavigate();
 

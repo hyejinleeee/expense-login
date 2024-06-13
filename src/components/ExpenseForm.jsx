@@ -33,8 +33,8 @@ const StForm = styled.form`
 function ExpenseForm({ activeDate }) {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  const createdBy = useSelector((state) => state.auth.nickname);
-  const userId = useSelector((state) => state.auth.userId);
+  const createdBy = useSelector((state) => state.auth.user.nickname);
+  const userId = useSelector((state) => state.auth.user.id);
 
   const addExpense = async (nextList) => {
     try {

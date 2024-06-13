@@ -39,9 +39,6 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const notifyLoginSuccess = () => toast("로그인 성공!");
-  const notifyLoginFail = () => toast("로그인 실패!");
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -56,13 +53,11 @@ function Login() {
       if (data.success) {
         dispatch(login(data));
         console.log(data);
-        notifyLoginSuccess();
+        toast.success("로그인이 완료되었습니다.");
         navigate("/");
-      } else {
-        notifyLoginFail();
       }
     } catch (error) {
-      notifyLoginFail();
+      toast.error(error?.response?.data?.message);
     }
 
     setId("");

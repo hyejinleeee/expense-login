@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, Outlet } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import { setUserInfo } from "../redux/slices/authSlice";
 
 const StNav = styled.nav`
   background-color: #c4c0c0;
@@ -35,6 +37,8 @@ const NavList = styled.ul`
 
 const NavItem = styled.li`
   display: flex;
+  gap: 15px;
+  align-items: center;
 `;
 
 const LogoutButton = styled.button`
@@ -45,14 +49,42 @@ const LogoutButton = styled.button`
   cursor: pointer;
 `;
 
+const AvatarImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+`;
+
 function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const notifyLogoutSuccess = () => toast("로그아웃 성공!");
+  const [user, setUser] = useState();
+
+  const getUserInfo = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return null;
+
+    const response = await axios.get(
+      `https://moneyfulpublicpolicy.co.kr/user`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data;
+  };
+
+  useEffect(() => {
+    getUserInfo().then((res) => {
+      dispatch(setUserInfo(res));
+      setUser(res);
+    });
+  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
-    notifyLogoutSuccess();
+    toast.success("로그아웃 되었습니다.");
     navigate("/");
   };
 
@@ -69,6 +101,8 @@ function Layout() {
             </NavItem>
           </NavList>
           <NavItem>
+            <AvatarImage src={user?.avatar} alt="User Avatar" />
+            <p>{user?.nickname}</p>
             <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
           </NavItem>
         </NavContainer>

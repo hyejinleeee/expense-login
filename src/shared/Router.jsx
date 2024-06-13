@@ -7,6 +7,8 @@ import Signup from "../pages/Signup";
 import Layout from "./Layout";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import axios from "axios";
 
 export const Router = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

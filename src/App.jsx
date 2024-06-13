@@ -11,7 +11,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <GlobalStyles />
         <Router />
-        <ToastContainer autoClose={700} position="top-left" />
+        <ToastContainer autoClose={1000} position="top-left" />
       </QueryClientProvider>
     </>
   );

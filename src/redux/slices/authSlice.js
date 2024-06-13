@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-//초기 상태값
 const initialState = {
   isAuthenticated: localStorage.getItem("accessToken") ? true : false,
-  userId: "",
-  nickname: "",
+  user: {},
 };
 
 const authSlice = createSlice({
@@ -15,15 +13,19 @@ const authSlice = createSlice({
       const user = action.payload;
       localStorage.setItem("accessToken", user.accessToken);
       state.isAuthenticated = true;
-      state.userId = user.userId;
-      state.nickname = user.nickname;
     },
     logout: (state) => {
       localStorage.removeItem("accessToken");
       state.isAuthenticated = false;
+      state.user = {};
+    },
+    setUserInfo: (state, action) => {
+      const user = action.payload;
+      state.user = { ...user };
+      console.log("유저정보", state.user);
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setUserInfo } = authSlice.actions;
 export default authSlice.reducer;

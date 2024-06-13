@@ -37,24 +37,21 @@ function Signup() {
   const [nickname, setNickname] = useState("");
   const navigate = useNavigate();
 
-  const notifySignupSuccess = () => toast("회원가입 성공!");
-  const notifySignupFail = () => toast("회원가입 실패!");
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (id.length < 4 || id.length > 10) {
-      alert("아이디는 4~10글자로 입력해주세요.");
+      alert("아이디는 4~10 영문으로입력해주세요.");
       return;
     }
 
     if (password.length < 4 || password.length > 15) {
-      alert("비밀번호는 4~15글자로 입력해주세요.");
+      alert("비밀번호는 4~15 영문으로 입력해주세요.");
       return;
     }
 
     if (nickname.length < 1 || nickname.length > 10) {
-      alert("닉네임은 1~10글자로 입력해주세요.");
+      alert("닉네임은 1~10 영문으로 입력해주세요.");
       return;
     }
 
@@ -69,13 +66,11 @@ function Signup() {
       );
       const data = response.data;
       if (data.success) {
-        notifySignupSuccess();
+        toast.success("회원가입이 완료되었습니다.");
         navigate("/login");
-      } else {
-        notifySignupFail();
       }
     } catch (error) {
-      notifySignupFail();
+      toast.error(error?.response?.data?.message);
     }
 
     setId("");
@@ -88,19 +83,19 @@ function Signup() {
       <p>회원가입</p>
       <input
         type="text"
-        placeholder="아이디"
+        placeholder="아이디(4~10 영문)"
         value={id}
         onChange={(e) => setId(e.target.value)}
       />
       <input
         type="password"
-        placeholder="비밀번호"
+        placeholder="비밀번호(4~10 영문)"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
       <input
         type="text"
-        placeholder="닉네임"
+        placeholder="닉네임(1~10 영문)"
         value={nickname}
         onChange={(e) => setNickname(e.target.value)}
       />
