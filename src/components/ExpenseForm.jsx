@@ -40,7 +40,7 @@ function ExpenseForm({ activeDate }) {
   const addExpense = async (nextList) => {
     try {
       await axios.post(
-        "https://sprinkle-peppered-workshop.glitch.me",
+        "https://sprinkle-peppered-workshop.glitch.me/expenses",
         nextList
       );
     } catch (error) {
