@@ -22,7 +22,6 @@ const authSlice = createSlice({
     setUserInfo: (state, action) => {
       const user = action.payload;
       state.user = { ...user };
-      console.log("유저정보", state.user);
     },
   },
 });

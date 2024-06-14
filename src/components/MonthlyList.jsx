@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const StUl = styled.ul`
   width: 750px;
@@ -93,7 +94,7 @@ function MonthlyList() {
     if (userId === list.userId) {
       navigate(`/detail/${list.id}`);
     } else {
-      alert("권한이 없습니다.");
+      toast.error("권한이 없습니다.");
     }
   };
 

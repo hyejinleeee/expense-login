@@ -5,6 +5,7 @@ import { setSelectedMonth } from "../redux/slices/btnSlice";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const StForm = styled.form`
   display: flex;
@@ -48,7 +49,7 @@ function ExpenseForm({ activeDate }) {
   const { mutate } = useMutation({
     mutationFn: addExpense,
     onSuccess: () => {
-      alert("데이터 삽입이 성공했습니다.");
+      toast.success("지출이 등록되었습니다.");
       queryClient.invalidateQueries(["expenses"]);
     },
   });
@@ -65,10 +66,12 @@ function ExpenseForm({ activeDate }) {
 
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
     if (!datePattern.test(date)) {
-      alert("날짜 형식이 올바르지 않습니다. YYYY-MM-DD 형식으로 입력해주세요.");
+      toast.error(
+        "날짜 형식이 올바르지 않습니다. YYYY-MM-DD 형식으로 입력해주세요."
+      );
       return;
     } else if (amount < 1) {
-      alert("유효한 금액을 입력해주세요.");
+      toast.error("유효한 금액을 입력해주세요.");
       return;
     }
 

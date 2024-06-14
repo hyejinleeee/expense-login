@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { isPending } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 const StForm = styled.form`
   display: flex;
@@ -116,11 +116,11 @@ function Detail() {
 
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
     if (!datePattern.test(date)) {
-      alert("날짜를 YYYY-MM-DD 형식으로 입력해주세요.");
+      toast.error("날짜를 YYYY-MM-DD 형식으로 입력해주세요.");
       return;
     }
     if (!item || parseInt(amount, 10) <= 0) {
-      alert("유효한 항목과 금액을 입력해주세요.");
+      toast.error("유효한 항목과 금액을 입력해주세요.");
       return;
     }
 
@@ -133,11 +133,13 @@ function Detail() {
     };
 
     mutationEdit.mutate(newExpense);
+    toast.success("수정 되었습니다.");
   };
 
   const handleDelete = () => {
     mutationDelete.mutate(id);
     navigate(`/`);
+    toast.success("삭제 되었습니다.");
   };
 
   if (isPending) return <div>Loading...</div>;
