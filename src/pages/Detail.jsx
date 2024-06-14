@@ -48,21 +48,25 @@ const StBtnDiv = styled.div`
 
 const fetchExpense = async ({ queryKey }) => {
   const [_, id] = queryKey;
-  const { data } = await axios.get(`http://localhost:5001/expenses/${id}`);
+  const { data } = await axios.get(
+    `https://sprinkle-peppered-workshop.glitch.me/${id}`
+  );
   return data;
 };
 
 const editExpense = async (updatedExpense) => {
   const { id, ...rest } = updatedExpense;
   const { data } = await axios.put(
-    `http://localhost:5001/expenses/${id}`,
+    `https://sprinkle-peppered-workshop.glitch.me/${id}`,
     rest
   );
   return data;
 };
 
 const deleteExpense = async (id) => {
-  const { data } = await axios.delete(`http://localhost:5001/expenses/${id}`);
+  const { data } = await axios.delete(
+    `https://sprinkle-peppered-workshop.glitch.me/${id}`
+  );
   return data;
 };
 

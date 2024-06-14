@@ -39,7 +39,10 @@ function ExpenseForm({ activeDate }) {
 
   const addExpense = async (nextList) => {
     try {
-      await axios.post("http://localhost:5001/expenses", nextList);
+      await axios.post(
+        "https://sprinkle-peppered-workshop.glitch.me",
+        nextList
+      );
     } catch (error) {
       console.error("지출 추가 오류:", error);
       alert("지출 추가 중 오류가 발생했습니다.");

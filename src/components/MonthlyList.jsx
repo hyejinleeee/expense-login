@@ -64,7 +64,9 @@ function MonthlyList() {
   const navigate = useNavigate();
 
   const fetchExpenses = async () => {
-    const response = await axios.get("http://localhost:5001/expenses");
+    const response = await axios.get(
+      "https://sprinkle-peppered-workshop.glitch.me"
+    );
     return response.data;
   };
 
