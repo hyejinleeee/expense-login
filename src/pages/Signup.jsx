@@ -41,17 +41,17 @@ function Signup() {
     e.preventDefault();
 
     if (id.length < 4 || id.length > 10) {
-      alert("아이디는 4~10 영문으로입력해주세요.");
+      toast.warn("아이디는 4~10 영문으로입력해주세요.");
       return;
     }
 
     if (password.length < 4 || password.length > 15) {
-      alert("비밀번호는 4~15 영문으로 입력해주세요.");
+      toast.warn("비밀번호는 4~15 영문으로 입력해주세요.");
       return;
     }
 
     if (nickname.length < 1 || nickname.length > 10) {
-      alert("닉네임은 1~10 영문으로 입력해주세요.");
+      toast.warn("닉네임은 1~10 영문으로 입력해주세요.");
       return;
     }
 
